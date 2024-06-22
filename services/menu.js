@@ -23,13 +23,6 @@ async function initializeDatabase() {
     }
 }
 
-export async function findOrders(id) {
-    console.log(id)
-    const order = await db.findOne({id : id})
-    console.log(order)
-    return order
-}
-
 initializeDatabase();
 
 

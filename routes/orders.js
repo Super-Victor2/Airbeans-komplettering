@@ -1,24 +1,23 @@
 import { Router } from 'express';
-import { findOrders} from '../services/menu.js';
+import { findOrders} from '../services/order.js';
 import { findUserById } from '../services/users.js';
-import { findOrdersByUserId } from '../services/order.js';
-import db from '../services/order.js'
+import db from '../services/order.js';
 
 const router = Router();
 
-let cart = []
-console.log(cart)
+let cart = [];
+console.log(cart);
 
 router.get('/orders',  async (req, res) => {
-    const order = await findOrders(req.query.id);
-    if(!order) {
+    const orders = await findOrders();
+    if(!orders) {
         return res.status(400).json({ error: 'Can not find orders' })
-    }
-    res.json(order)
+    };
+    res.json(orders);
 });
 
 router.get('/orders/cart', (req, res) => {
-    res.json(cart)
+    res.json(cart);
 });
 
 router.post('/orders/cart/', async (req, res) => {
@@ -34,10 +33,10 @@ router.post('/orders/cart/', async (req, res) => {
     if(id && title && desc && price) {
         const newCartItem = { id, title, desc, price };
         try {
-            cart.push(newCartItem)
-            res.status(201).json(newCartItem)
+            cart.push(newCartItem);
+            res.status(201).json(newCartItem);
         } catch (error) {
-            res.status(500).send(error)
+            res.status(500).send(error);
         }
     } else {
         res.status(400).send('New cart item was not created');
@@ -57,6 +56,8 @@ router.post('/orders/confirm/', async (req, res) => {
             userId: userId,
             cart: cart,
         });
+
+        cart = [];
 
         res.json({
             message: 'Order found and saved',

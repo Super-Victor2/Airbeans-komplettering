@@ -1,17 +1,18 @@
 import { Router } from 'express'
-import { createUser, findUser } from '../services/users.js'
+import { createUser, findUser, findUsers } from '../services/users.js'
 import validate from '../middlewares/validate.js'
 
 const router = Router()
 
 // Register new user
 router.post('/auth/register', validate, async (req, res) => {
-    const user = await findUser(req.body.username)
+    const user = await findUser(req.body.username);
      
     if (user) {
-        return res.status(400).json({ error: 'sorry user already exists' })
+        return res.status(400).json({ error: 'sorry user already exists' });
     }
-    const newUser = await createUser(req.body)
+
+    const newUser = await createUser(req.body);
    
     const response = {
         success: true,
@@ -20,24 +21,20 @@ router.post('/auth/register', validate, async (req, res) => {
         data: newUser
         
     }
-    res.json(response)
+    res.json(response);
 });
 
 // User login
 router.post('/auth/login', validate, async (req, res) => {
    
-    const user = await findUser(req.body.username)
+    const user = await findUser(req.body.username);
     if (!user) {
-        
-        return res.status(400).json({ error: 'Sorry user dont exists' })
-    
-    
+        return res.status(400).json({ error: 'Sorry user dont exists' });
     } else if (user.password !== req.body.password) {
-
-        return res.status(400).json({ error: 'The password is incorrect' })
+        return res.status(400).json({ error: 'The password is incorrect' });
     }
     
-    global.user = user
+    global.user = user;
     
     const response = {
         success: true,
@@ -46,8 +43,16 @@ router.post('/auth/login', validate, async (req, res) => {
         data: user
         
     }
-    res.json(response)
+    res.json(response);
 
+});
+
+router.get('/auth/users', async (req, res) => {
+    const users = await findUsers();
+    if(!users) {
+        return res.status(400).json({ error: 'Can not find any users'});
+    }
+    res.json(users);
 });
 
 export default router
