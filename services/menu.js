@@ -1,6 +1,6 @@
 import nedb from 'nedb-promises';
 
-const db = nedb.create({ filename: 'menu.db', autoload: true });
+const db = new nedb({ filename: 'menu.db', autoload: true });
 
 const initialMenu = [
     { id: 1, title: "Bryggkaffe", desc: "Bryggd på månadens bönor.", price: 39 },
@@ -23,6 +23,15 @@ async function initializeDatabase() {
     }
 }
 
+export async function findOrders(id) {
+    console.log(id)
+    const order = await db.findOne({id : id})
+    console.log(order)
+    return order
+}
+
 initializeDatabase();
+
+
 
 export default db;

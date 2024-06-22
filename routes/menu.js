@@ -1,4 +1,4 @@
-import db from '../services/menu.js'
+import db from '../services/menu.js';
 import { Router } from 'express';
 
 const router = Router();
